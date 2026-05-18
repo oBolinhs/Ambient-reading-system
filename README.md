@@ -1,3 +1,5 @@
+**Ambient reading system**
+
 This project is a simple test of an **Ambient reading system** which covers medium difficulty ESP32 concepts such as 
 
 **Libraries:** The DHT11 library is used to read the humididty and temperature of the room, and the u8g2 library is used to display data on an external display, in this case an OLED

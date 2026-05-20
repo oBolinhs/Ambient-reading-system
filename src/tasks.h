@@ -4,11 +4,14 @@
 #include "DHT.h"
 #include <Firebase_ESP_Client.h>
 
+//Declaring the functions used 
 void readAmbient(void *parameter);
 void displayData(void *parameter);
 void displayData(void *parameter);
 void sendFirebase(void *parameter);
 
+
+//Declare as extern since they are declared in the main.cpp
 extern QueueHandle_t humidityHandleSend = NULL;
 extern QueueHandle_t temperatureHandleSend = NULL;
 extern QueueHandle_t humidityHandleDB = NULL;

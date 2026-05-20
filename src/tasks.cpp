@@ -63,9 +63,9 @@ void sendFirebase(void *parameter) {
   float humidityDB = 0.0f;
   float tempDB = 0.0f;
   while(true) {
-    //Sending the data to the firebase
+    //Sending the data to the firebase, needed a second queue
     if(xQueueReceive(humidityHandleDB, &humidityDB, portMAX_DELAY)){
-      Firebase.RTDB.setFloat(&fbdo, "/bedroom/humidity", humidityDB);
+      Firebase.RTDB.setFloat(&fbdo, "/bedroom/humidity", humidityDB);   
     }
     if(xQueueReceive(temperatureHandleDB, &tempDB, portMAX_DELAY)){
       Firebase.RTDB.setFloat(&fbdo, "/bedroom/temperature", tempDB);    

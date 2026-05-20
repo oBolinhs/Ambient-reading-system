@@ -12,10 +12,10 @@ void sendFirebase(void *parameter);
 
 
 //Declare as extern since they are declared in the main.cpp
-extern QueueHandle_t humidityHandleSend = NULL;
-extern QueueHandle_t temperatureHandleSend = NULL;
-extern QueueHandle_t humidityHandleDB = NULL;
-extern QueueHandle_t temperatureHandleDB = NULL;
+extern QueueHandle_t humidityHandleSend;
+extern QueueHandle_t temperatureHandleSend;
+extern QueueHandle_t humidityHandleDB;
+extern QueueHandle_t temperatureHandleDB;
 
 extern U8G2_SSD1306_64X48_ER_F_HW_I2C u8g2;
 extern DHT dht;

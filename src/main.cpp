@@ -75,7 +75,7 @@ void setup() {
     while (1);
   }
   u8g2.clearBuffer();
-
+  Serial.println("Cleared buffer");
   //Setting up the font, since its the same all across
   u8g2.setFont(u8g2_font_5x7_tr);
 

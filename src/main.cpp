@@ -4,17 +4,12 @@
 #include "DHT.h"
 #include <Firebase_ESP_Client.h>
 
+#include "tasks.h"
+#include "sensitive_info.h"
+
 #define DHTPIN 17     // Digital pin connected to the DHT sensor
 #define DHTTYPE DHT11   // DHT 22  (AM2302), AM2321
 
-#define API_KEY "AIzaSyDR8ACcwzVig4FV_UKU-ZqUbaBMMpgfvFU"
-#define DATABASE_URL "esp-projects-44cdb-default-rtdb.europe-west1.firebasedatabase.app"
-
-#define USER_EMAIL "esp32.ambient@gmail.com"
-#define USER_PASSWORD "dht_123456"
-
-const char* ssid = "Burger King - Guest";
-const char* password = "VinhoVerde";
 
 FirebaseData fbdo;
 FirebaseAuth auth;
@@ -38,78 +33,7 @@ TaskHandle_t sendFirebaseTask = NULL;
 U8G2_SSD1306_64X48_ER_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);
 
 //First task function
-void readAmbient(void *parameter) {
 
-  //Declaring the used variables
-  float humiditySend = 0.0f;
-  float tempCelsSend = 0.0f;
-  float lastHumidity = 0.0f;
-  float lastTemp = 0.0f;
-  while(true)
-  {
-    //Read the values for humidity and temperature
-    humiditySend = dht.readHumidity();
-    tempCelsSend = dht.readTemperature(); 
-
-    //If the value remains unchanged, no need to update the OLED screen
-    if(humiditySend != lastHumidity ){
-      xQueueSend(humidityHandleSend, &humiditySend, portMAX_DELAY); //send the variable address via queue
-      xQueueSend(humidityHandleDB, &humiditySend, portMAX_DELAY);
-      lastHumidity = humiditySend;    //update the last value
-    }
-    if(tempCelsSend != lastTemp){
-      xQueueSend(temperatureHandleSend, &tempCelsSend, portMAX_DELAY);  //send the variable address via queue
-      xQueueSend(temperatureHandleDB, &tempCelsSend, portMAX_DELAY);
-      lastTemp = tempCelsSend;      //update the last value
-    }
-    vTaskDelay(100 / portTICK_PERIOD_MS);
-  }
-}
-
-//função da segunda task
-void displayData(void *parameter) {
-
-  //Declaring the internal variables
-  float humidityReceive = 0.0f;
-  float tempReceive = 0.0f;
-
-  while(true){
-
-    //if its received from the humidity
-    if(xQueueReceive(humidityHandleSend, &humidityReceive, portMAX_DELAY)){
-      //Section for printing on the OLED
-      u8g2.drawStr(0,10,"Humidity: ");
-      String hum = String(humidityReceive,1);
-      u8g2.drawStr(0,17, hum.c_str());
-      u8g2.sendBuffer();
-    }
-    //if its recevied from the temperature
-    if(xQueueReceive(temperatureHandleSend, &tempReceive, portMAX_DELAY)){
-      //Section for printing on the OLED
-      u8g2.drawStr(0,30,"Temperature: ");
-      String temp = String(tempReceive,1);
-      u8g2.drawStr(0,37, temp.c_str());
-      u8g2.sendBuffer();
-    }
-    vTaskDelay(100 / portTICK_PERIOD_MS);
-  }
-
-}
-
-void sendFirebase(void *parameter) {
-  float humidityDB = 0.0f;
-  float tempDB = 0.0f;
-  while(true) {
-    //Sending the data to the firebase
-    if(xQueueReceive(humidityHandleDB, &humidityDB, portMAX_DELAY)){
-      Firebase.RTDB.setFloat(&fbdo, "/bedroom/humidity", humidityDB);
-    }
-    if(xQueueReceive(temperatureHandleDB, &tempDB, portMAX_DELAY)){
-      Firebase.RTDB.setFloat(&fbdo, "/bedroom/temperature", tempDB);    
-    }
-    vTaskDelay(100 / portTICK_PERIOD_MS);
-  }
-}
 
 void setup() {
   Serial.begin(115200);
@@ -119,7 +43,7 @@ void setup() {
   dht.begin();
 
   //Configure wifi
-  WiFi.begin(ssid, password);
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   while (WiFi.status() != WL_CONNECTED) {
       delay(500);
       Serial.print(".");

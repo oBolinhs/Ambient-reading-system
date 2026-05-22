@@ -1,9 +1,11 @@
-**Ambient reading system**
+# Ambient reading system
 
-This project is a simple test of an **Ambient reading system** which covers medium difficulty ESP32 concepts such as 
+The ambient reading is a personal project developed to expand my skills utilizing PlatformIO, programming ESP32 and using FreeRTOS. Developed to read the temperature and humidity of a given room, it uploads these values into a Firebase Database and displays them on an OLED screen.
 
-**Libraries:** The DHT11 library is used to read the humididty and temperature of the room, and the u8g2 library is used to display data on an external display, in this case an OLED
+## Implemented Hardware
 
-**RTOS tasks** There are two tasks present in this code for the system to run independently, one for DHT11 reading (priority 1) and another one to print on the OLED screen (priority 2), both in the same core for modularity purposes
+The project makes use of **DHT11 module** to read ambient temperature and humidity, a **0.66in OLED** 64x48 to display data and an **ESP32 Dev Module** as the processing unit.
 
-**RTOS queues** Since the data type for the read and printed variables are the same I used a queue to pass the variables from one task to another.
+## Implemented Software
+
+It is divided into 2 files, the tasks.cpp/h where it is declared the task functions and the main.cpp where the setup is, where we initialize the tasks
